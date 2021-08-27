@@ -48,9 +48,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KVj-kp-YJW">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KVj-kp-YJW">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -59,8 +58,17 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aMe-gx-zxD"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KVj-kp-YJW" firstAttribute="centerX" secondItem="0B5-9g-muX" secondAttribute="centerX" id="Knf-Dm-Bb0"/>
+                            <constraint firstItem="KVj-kp-YJW" firstAttribute="leading" secondItem="aMe-gx-zxD" secondAttribute="leading" id="gaO-Px-fIU"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="KVj-kp-YJW" secondAttribute="bottom" constant="-34" id="h7B-La-8hF"/>
+                            <constraint firstItem="KVj-kp-YJW" firstAttribute="top" secondItem="aMe-gx-zxD" secondAttribute="top" id="mZq-J7-vmZ"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="3BN-r7-JlD"/>
+                    <connections>
+                        <outlet property="noteTextView" destination="KVj-kp-YJW" id="knj-au-BId"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="73I-r9-J7M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
