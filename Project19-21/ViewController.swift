@@ -16,6 +16,8 @@ class ViewController: UITableViewController {
         
         toolbarItems = barButtonItems()
         navigationController?.isToolbarHidden = false
+        title = "Notes"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,7 +48,6 @@ class ViewController: UITableViewController {
     }
     
     @objc func create() {
-        print("create tapped!")
         performSegue(withIdentifier: "toDetail", sender: self)
     }
 

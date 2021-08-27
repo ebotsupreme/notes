@@ -17,6 +17,7 @@ class DetailViewController: UIViewController {
         
         notificationCenterSettings()
         
+        
         print("Detail note: \(note)")
     }
     
@@ -42,6 +43,22 @@ class DetailViewController: UIViewController {
         
         let selectedRange = noteTextView.selectedRange
         noteTextView.scrollRangeToVisible(selectedRange)
+    }
+    
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        
+        if let savedData = try? jsonEncoder.encode(note) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "notes")
+        }
+    }
+    
+    func deleteUserDefault() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "notes")
+        let isDeleted = defaults.bool(forKey: "notes")
+        print("User default key notes deleted: \(isDeleted)")
     }
     
 }
