@@ -1,20 +1,18 @@
 //
-//  ViewController.swift
+//  DetailViewController.swift
 //  Project19-21
 //
-//  Created by Eddie Jung on 8/26/21.
+//  Created by Eddie Jung on 8/27/21.
 //
 
 import UIKit
 
-class ViewController: UITableViewController {
+class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         
     }
 
-
 }
-
