@@ -18,6 +18,8 @@ class ViewController: UITableViewController {
         navigationController?.isToolbarHidden = false
         title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        load()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,6 +51,23 @@ class ViewController: UITableViewController {
     
     @objc func create() {
         performSegue(withIdentifier: "toDetail", sender: self)
+    }
+    
+    func load() {
+        let defaults = UserDefaults.standard
+        
+        if let savedData = defaults.object(forKey: "notes") as? Data {
+            let jsonDecoder = JSONDecoder()
+            
+            do {
+                notes = try jsonDecoder.decode([Note].self, from: savedData)
+            } catch {
+                print("Failed to load notes.")
+            }
+        }
+        
+        
+        
     }
 
 }
