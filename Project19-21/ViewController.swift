@@ -18,7 +18,7 @@ class ViewController: UITableViewController {
         navigationController?.isToolbarHidden = false
         title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
+        print(UserDefaults.standard.bool(forKey: "notes"))
         load()
     }
     
@@ -30,6 +30,8 @@ class ViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath)
         let note = notes[indexPath.row]
         cell.textLabel?.text = note.title
+        
+        // not working
         cell.detailTextLabel?.text = "\(note.timeStamp)    \(note.description)"
         
         return cell
@@ -38,6 +40,8 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(identifier: "Detail") as? DetailViewController {
             let note = notes[indexPath.row]
+            vc.notes = notes
+            vc.index = indexPath.row
             vc.note = note
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -53,6 +57,14 @@ class ViewController: UITableViewController {
         performSegue(withIdentifier: "toDetail", sender: self)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "toDetail") {
+            if let dvc = segue.destination as? DetailViewController {
+                dvc.notes = notes
+            }
+        }
+    }
+    
     func load() {
         let defaults = UserDefaults.standard
         
@@ -61,13 +73,18 @@ class ViewController: UITableViewController {
             
             do {
                 notes = try jsonDecoder.decode([Note].self, from: savedData)
+                print("User Default notes loaded: \(notes)")
             } catch {
                 print("Failed to load notes.")
             }
         }
-        
-        
-        
+    }
+    
+    func deleteUserDefault() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "notes")
+        let isDeleted = defaults.bool(forKey: "notes")
+        print("User default key notes deleted: \(isDeleted)")
     }
 
 }

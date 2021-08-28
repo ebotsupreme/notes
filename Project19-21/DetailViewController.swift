@@ -11,14 +11,20 @@ class DetailViewController: UIViewController {
     @IBOutlet var noteTextView: UITextView!
     
     var note: Note?
+    var notes: [Note] = [Note]()
+    var index: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         notificationCenterSettings()
         
+        doneButtonSettings()
         
-        print("Detail note: \(note)")
+        load()
+        
+        print("VDL Detail note: \(note)")
+        print("VDL Detail notes: \(notes)")
     }
     
     func notificationCenterSettings() {
@@ -48,17 +54,86 @@ class DetailViewController: UIViewController {
     func save() {
         let jsonEncoder = JSONEncoder()
         
-        if let savedData = try? jsonEncoder.encode(note) {
+        if let savedData = try? jsonEncoder.encode(notes) {
             let defaults = UserDefaults.standard
             defaults.set(savedData, forKey: "notes")
+            print("Save success!")
+            
+            // go back to viewController and reload table
         }
     }
     
-    func deleteUserDefault() {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "notes")
-        let isDeleted = defaults.bool(forKey: "notes")
-        print("User default key notes deleted: \(isDeleted)")
+    func doneButtonSettings() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(done))
+    }
+    
+    @objc func done() {
+        print(noteTextView.text)
+        
+        // return if noteTextView is empty & trigger alert
+        if noteTextView.text == "" { return }
+        
+        // create new note
+        let lines = noteTextView.text.split(whereSeparator: \.isNewline)
+        let title = String(lines[0])
+        let removeTitleFromDescription = lines.dropFirst(1)
+        let description = removeTitleFromDescription.joined(separator: "\n")
+        let timeStamp = formatDate()
+        
+        if note != nil {
+            if let currentIndex = index {
+                if notes[currentIndex] === note {
+                    print("Match found for Note. Edit note")
+                    
+                    // edit
+                    let note = notes[currentIndex]
+                    note.title = title
+                    note.description = description
+                    note.timeStamp = timeStamp
+                    print("editted note: \(note)")
+//                    notes.append(currentNote)
+                }
+            }
+                
+            
+        } else {
+            print("currentNote is empty! \(note). Create note!")
+//            // create
+            let note = Note(title: title, description: description, timeStamp: timeStamp)
+            print("created note: \(note.title), \(note.description), \(note.timeStamp)")
+            notes.append(note)
+            print("notes array: \(notes)")
+        }
+        print("saving")
+
+        save()
+        
+    }
+    
+    func formatDate() -> String {
+        //new date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E, MM/dd/yy h:mm a"
+        dateFormatter.amSymbol = "AM"
+        dateFormatter.pmSymbol = "PM"
+        
+        let dateFromStr = dateFormatter.string(from: Date())
+        
+        print(dateFromStr)
+        return dateFromStr
+        
+    }
+    
+    func load() {
+        print("load note")
+        // load in from tableviewcell
+        if note != nil {
+            let title = note?.title ?? ""
+            let description = note?.description ?? ""
+            let titleAndDescription = title + "\n" + description
+            print("description loaded: \(titleAndDescription)")
+            noteTextView.text = titleAndDescription
+        }
     }
     
 }
