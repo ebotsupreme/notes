@@ -22,7 +22,9 @@ class ViewController: UITableViewController {
         navigationController?.isToolbarHidden = false
         title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
         print(UserDefaults.standard.bool(forKey: "notes"))
+        
         load()
     }
     
@@ -34,8 +36,6 @@ class ViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath)
         let note = notes[indexPath.row]
         cell.textLabel?.text = note.title
-        
-        // not working
         cell.detailTextLabel?.text = "\(note.timeStamp)    \(note.description)"
         
         return cell
