@@ -10,6 +10,10 @@ import UIKit
 class ViewController: UITableViewController {
     
     var notes = [Note]()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.reloadData()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
