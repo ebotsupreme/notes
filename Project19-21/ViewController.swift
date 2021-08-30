@@ -52,6 +52,15 @@ class ViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            notes.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            save()
+            tableView.reloadData()
+        }
+    }
+    
     func barButtonItems() -> [UIBarButtonItem] {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(create))
@@ -89,11 +98,27 @@ class ViewController: UITableViewController {
         }
     }
     
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        
+        if let savedData = try? jsonEncoder.encode(notes) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "notes")
+        }
+    }
+    
     func deleteUserDefault() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "notes")
         let isDeleted = defaults.bool(forKey: "notes")
         print("User default key notes deleted: \(isDeleted)")
     }
+    
+    /* Additional features to be worked on
+        1. multi view button - on click show custom table view cells instead of a tableview list
+        2. Hide seconds inside timestamp before displaying in tableview subtitle
+        3. Add search feature
+        4. when sharing, add custom title and subtitle.
+    */
 }
 
