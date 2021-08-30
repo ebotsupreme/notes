@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LinkPresentation
 
 class DetailViewController: UIViewController {
     @IBOutlet var noteTextView: UITextView!
@@ -19,18 +20,25 @@ class DetailViewController: UIViewController {
         
         notificationCenterSettings()
         
-        doneButtonSettings()
-        
         load()
         
-        print("VDL Detail note: \(note)")
-        print("VDL Detail notes: \(notes)")
+        navButtonSettings()
+        
+        print("ViewDidLoad - noteTextView: \(noteTextView)")
     }
     
     func notificationCenterSettings() {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc func shareTapped() {
+        guard let sharedNote = note else { return }
+        
+        let avc = UIActivityViewController(activityItems: [sharedNote.title], applicationActivities: [])
+        avc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(avc, animated: true)
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
@@ -59,12 +67,16 @@ class DetailViewController: UIViewController {
             defaults.set(savedData, forKey: "notes")
             print("Save success!")
             
-            // go back to viewController and reload table
+            // dismiss keyboard
+            self.view.endEditing(true)
         }
     }
     
-    func doneButtonSettings() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(done))
+    func navButtonSettings() {
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(done)),
+            UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
+        ]
     }
     
     @objc func done() {
@@ -91,7 +103,6 @@ class DetailViewController: UIViewController {
                     note.description = description
                     note.timeStamp = timeStamp
                     print("editted note: \(note)")
-//                    notes.append(currentNote)
                 }
             }
                 
@@ -135,5 +146,4 @@ class DetailViewController: UIViewController {
             noteTextView.text = titleAndDescription
         }
     }
-    
 }
