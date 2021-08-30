@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UITableViewController {
-    
+    var numberOfNotes: UILabel!
     var notes = [Note]()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -18,14 +18,13 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(UserDefaults.standard.bool(forKey: "notes"))
+        load()
+        
         toolbarItems = barButtonItems()
         navigationController?.isToolbarHidden = false
         title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        print(UserDefaults.standard.bool(forKey: "notes"))
-        
-        load()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,7 +53,11 @@ class ViewController: UITableViewController {
     func barButtonItems() -> [UIBarButtonItem] {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(create))
-        return [spacer, compose]
+        numberOfNotes = UILabel()
+        numberOfNotes.text = "\(notes.count) Notes"
+        print("toolbar numberOfNotes: \(notes.count)")
+        let toolbarNumberOfNotes = UIBarButtonItem(customView: numberOfNotes)
+        return [spacer, toolbarNumberOfNotes, spacer, compose]
     }
     
     @objc func create() {
