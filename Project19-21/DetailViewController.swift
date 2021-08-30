@@ -19,12 +19,8 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         notificationCenterSettings()
-        
         load()
-        
         navButtonSettings()
-        
-        print("ViewDidLoad - noteTextView: \(noteTextView)")
     }
     
     func notificationCenterSettings() {
@@ -65,9 +61,8 @@ class DetailViewController: UIViewController {
         if let savedData = try? jsonEncoder.encode(notes) {
             let defaults = UserDefaults.standard
             defaults.set(savedData, forKey: "notes")
-            print("Save success!")
             
-            // dismiss keyboard
+            // dismiss keyboard and focus
             self.view.endEditing(true)
         }
     }
@@ -80,8 +75,6 @@ class DetailViewController: UIViewController {
     }
     
     @objc func done() {
-        print(noteTextView.text)
-        
         // return if noteTextView is empty & trigger alert
         if noteTextView.text == "" { return }
         
@@ -95,54 +88,39 @@ class DetailViewController: UIViewController {
         if note != nil {
             if let currentIndex = index {
                 if notes[currentIndex] === note {
-                    print("Match found for Note. Edit note")
-                    
                     // edit
                     let note = notes[currentIndex]
                     note.title = title
                     note.description = description
                     note.timeStamp = timeStamp
-                    print("editted note: \(note)")
                 }
             }
-                
-            
         } else {
-            print("currentNote is empty! \(note). Create note!")
-//            // create
+            // create
             let note = Note(title: title, description: description, timeStamp: timeStamp)
-            print("created note: \(note.title), \(note.description), \(note.timeStamp)")
             notes.append(note)
-            print("notes array: \(notes)")
         }
-        print("saving")
 
         save()
-        
     }
     
     func formatDate() -> String {
         //new date
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, MM/dd/yy h:mm a"
+        dateFormatter.dateFormat = "E, MM/dd/yy h:mm:ss a"
         dateFormatter.amSymbol = "AM"
         dateFormatter.pmSymbol = "PM"
-        
         let dateFromStr = dateFormatter.string(from: Date())
         
-        print(dateFromStr)
         return dateFromStr
-        
     }
     
     func load() {
-        print("load note")
         // load in from tableviewcell
         if note != nil {
             let title = note?.title ?? ""
             let description = note?.description ?? ""
             let titleAndDescription = title + "\n" + description
-            print("description loaded: \(titleAndDescription)")
             noteTextView.text = titleAndDescription
         }
     }

@@ -12,6 +12,7 @@ class ViewController: UITableViewController {
     var notes = [Note]()
     
     override func viewWillAppear(_ animated: Bool) {
+        load()
         self.tableView.reloadData()
     }
 
@@ -19,6 +20,7 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         
         print(UserDefaults.standard.bool(forKey: "notes"))
+//        deleteUserDefault()
         load()
         
         toolbarItems = barButtonItems()
@@ -55,7 +57,6 @@ class ViewController: UITableViewController {
         let compose = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(create))
         numberOfNotes = UILabel()
         numberOfNotes.text = "\(notes.count) Notes"
-        print("toolbar numberOfNotes: \(notes.count)")
         let toolbarNumberOfNotes = UIBarButtonItem(customView: numberOfNotes)
         return [spacer, toolbarNumberOfNotes, spacer, compose]
     }
@@ -80,7 +81,8 @@ class ViewController: UITableViewController {
             
             do {
                 notes = try jsonDecoder.decode([Note].self, from: savedData)
-                print("User Default notes loaded: \(notes)")
+                // sort notes by time
+                notes = notes.sorted(by: { $0.timeStamp.compare($1.timeStamp) == .orderedDescending })
             } catch {
                 print("Failed to load notes.")
             }
@@ -93,6 +95,5 @@ class ViewController: UITableViewController {
         let isDeleted = defaults.bool(forKey: "notes")
         print("User default key notes deleted: \(isDeleted)")
     }
-
 }
 
